@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 import "./PriceConverter.sol";
 
     error FundMe__NotOwner();
+    error FundMe__MinimumFundAmountError();
+    error FundMe__CallFailed();
 
 /** @title A contract for crowd funding
  *  @author Ilkin Mammadli
@@ -40,7 +42,9 @@ contract FundMe {
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, "Minimum fund amount must be 50 USD.");
+        if (msg.value.getConversionRate(s_priceFeed) < MINIMUM_USD) {
+            revert FundMe__MinimumFundAmountError();
+        }
         s_funders.push(msg.sender);
         s_addressToAmountFunded[msg.sender] += msg.value;
     }
@@ -53,7 +57,9 @@ contract FundMe {
         s_funders = new address[](0);
 
         (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
-        require(callSuccess, "call failed");
+        if (!callSuccess) {
+            revert FundMe__CallFailed();
+        }
     }
 
     function cheaperWithdraw() public payable onlyOwner {
@@ -64,7 +70,9 @@ contract FundMe {
         }
         s_funders = new address[](0);
         (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
-        require(callSuccess, "call failed");
+        if (!callSuccess) {
+            revert FundMe__CallFailed();
+        }
     }
 
     function getOwner() public view returns (address) {
