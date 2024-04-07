@@ -31,7 +31,7 @@ chai.use(solidity);
 
         describe("fund", async () => {
             it("should fail if you don't send enough ETH", async () => {
-                await expect(fundMe.fund()).to.be.revertedWith("Minimum fund amount must be 50 USD.");
+                await expect(fundMe.fund()).to.be.revertedWith("FundMe__MinimumFundAmountError");
             });
 
             it("should update the amount funded data structure", async () => {
