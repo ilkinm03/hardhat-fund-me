@@ -5,6 +5,14 @@
   "repository": "https://github.com/ilkinm03/hardhat-fund-me.git",
   "author": "Ilkin Mammadli <ilkinmammadli01@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "test": "yarm hardhat test",
+    "test:staging": "yarn hardhat test --network sepolia",
+    "coverage": "yarn hardhat coverage",
+    "lint": "yarn solhint 'contracts/**/*.sol'",
+    "lint:fix": "yarn solhint 'contracts/**/*.sol' --fix",
+    "format": "yarn prettier --write ."
+  },
   "devDependencies": {
     "@chainlink/contracts": "^1.0.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
